@@ -109,10 +109,14 @@ feature {NONE} -- Implementation
 			prop: DOUBLE
 			cmp: EG_PARTICLE
 			region: EV_RECTANGLE
-			childe: EG_QUAD_TREE
+			childe: detachable EG_QUAD_TREE
+			l_result: detachable like traverse_tree
+			l_particle: detachable EG_PARTICLE
 		do
 			if node.is_leaf then
-				Result := n_body_force (a_particle, node.particle)
+				l_particle := node.particle
+				check l_particle /= Void end -- Implied by `is_leaf'
+				l_result := n_body_force (a_particle, l_particle)
 			else
 				cmp := node.center_of_mass_particle
 				region := node.region
@@ -129,39 +133,40 @@ feature {NONE} -- Implementation
 				end
 				if prop < theta then
 						-- Approximate
-					Result := n_body_force (a_particle, cmp)
+					l_result := n_body_force (a_particle, cmp)
 				else
 						-- Inspect children
 					childe := node.childe_ne
-					if childe /= Void then
-						Result := traverse_tree (childe, a_particle)
+					if attached childe as l_childe then
+						l_result := traverse_tree (l_childe, a_particle)
 					end
 					childe := node.childe_nw
-					if childe /= Void then
-						if Result = Void then
-							Result := traverse_tree (childe, a_particle)
+					if attached childe as l_childe_2 then
+						if l_result = Void then
+							l_result := traverse_tree (l_childe_2, a_particle)
 						else
-							Result := Result + traverse_tree (childe, a_particle)
+							l_result := l_result + traverse_tree (l_childe_2, a_particle)
 						end
 					end
 					childe := node.childe_se
-					if childe /= Void then
-						if Result = Void then
-							Result := traverse_tree (childe, a_particle)
+					if attached childe as l_childe_3 then
+						if l_result = Void then
+							l_result := traverse_tree (l_childe_3, a_particle)
 						else
-							Result := Result + traverse_tree (childe, a_particle)
+							l_result := l_result + traverse_tree (l_childe_3, a_particle)
 						end
 					end
 					childe := node.childe_sw
-					if childe /= Void then
-						if Result = Void then
-							Result := traverse_tree (childe, a_particle)
+					if attached childe as l_childe_4 then
+						if l_result = Void then
+							l_result := traverse_tree (l_childe_4, a_particle)
 						else
-							Result := Result + traverse_tree (childe, a_particle)
+							l_result := l_result + traverse_tree (l_childe_4, a_particle)
 						end
 					end
 				end
 			end
+			Result := l_result
 		ensure
 			Result_exists: Result /= Void
 		end

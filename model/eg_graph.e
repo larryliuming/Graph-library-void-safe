@@ -88,8 +88,8 @@ feature -- Status report
 	has_linkable (a_linkable: EG_LINKABLE): BOOLEAN
 			-- Is `a_linkable' part of the model?
 		local
-			node: like node_type
-			cluster: EG_CLUSTER
+			node: detachable like node_type
+			cluster: detachable EG_CLUSTER
 		do
 			node ?= a_linkable
 			if node /= Void then
@@ -290,7 +290,12 @@ feature {EG_FIGURE_WORLD} -- Implementation
 
 	node_type: EG_NODE
 			-- Type of nodes in `nodes'.
+		local
+			l_result: detachable like node_type
 		do
+			check anchor_type_only: False end
+			check l_result /= Void end -- Satisfy void-safe compiler
+			Result := l_result
 		end
 
 feature {EG_ITEM} -- Implementation
@@ -300,8 +305,8 @@ feature {EG_ITEM} -- Implementation
 		require
 			a_cluster /= Void
 		local
-			l_cluster: EG_CLUSTER
-			l_node: like node_type
+			l_cluster: detachable EG_CLUSTER
+			l_node: detachable like node_type
 			l_linkables: ARRAYED_LIST [EG_LINKABLE]
 			i: INTEGER
 		do
@@ -316,6 +321,7 @@ feature {EG_ITEM} -- Implementation
 					remove_all (l_cluster)
 				else
 					l_node ?= l_linkables.i_th (i)
+					check l_node /= Void end -- FIXME: Implied by ...?
 					remove_links (l_node.links)
 					remove_node (l_node)
 					i := i + 1

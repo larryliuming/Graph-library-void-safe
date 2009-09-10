@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	graph: EG_GRAPH
+	graph: detachable EG_GRAPH
 			-- The graph model `Current' is part of (if not Void).
 
 	id: INTEGER
