@@ -189,13 +189,13 @@ feature -- Element change
 			a_node_no_links: a_node.links.is_empty
 		do
 			nodes.prune_all (a_node)
-			if a_node.cluster /= Void then
-				a_node.cluster.prune_all (a_node)
+			if attached a_node.cluster as l_cluster then
+				l_cluster.prune_all (a_node)
 			end
 			node_remove_actions.call ([a_node])
 		ensure
 			not_has_a_node: not has_node (a_node)
-			removed_from_cluster: a_node.cluster /= Void implies not a_node.cluster.flat_linkables.has (a_node)
+			removed_from_cluster: attached a_node.cluster as le_cluster implies not le_cluster.flat_linkables.has (a_node)
 		end
 
 	remove_cluster (a_cluster: EG_CLUSTER)
@@ -206,13 +206,13 @@ feature -- Element change
 			a_cluster_is_empty: a_cluster.flat_linkables.is_empty
 		do
 			clusters.prune_all (a_cluster)
-			if a_cluster.cluster /= Void then
-				a_cluster.cluster.prune_all (a_cluster)
+			if attached a_cluster.cluster as l_cluster then
+				l_cluster.prune_all (a_cluster)
 			end
 			cluster_remove_actions.call ([a_cluster])
 		ensure
 			not_has_a_cluster: not has_cluster (a_cluster)
-			removed_from_cluster: old (a_cluster.cluster) /= Void implies not (old (a_cluster.cluster)).flat_linkables.has (a_cluster)
+			removed_from_cluster: attached (old (a_cluster.cluster)) as le_cluster implies not le_cluster.flat_linkables.has (a_cluster)
 		end
 
 	wipe_out

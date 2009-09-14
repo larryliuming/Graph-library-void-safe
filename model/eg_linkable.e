@@ -27,8 +27,14 @@ feature -- Access
 
 	link_name: STRING
 			-- Name for linking
+		require
+			set: name /= Void
+		local
+			l_result: detachable like link_name
 		do
-			Result := name
+			l_result := name
+			check l_result /= Void end -- Implied by precondition `set'
+			Result := l_result
 		end
 
 	cluster: detachable EG_CLUSTER

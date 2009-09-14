@@ -133,7 +133,7 @@ feature -- Status Report
 		require
 			a_linkable_not_void: a_linkable /= Void
 		local
-			a_linkable_figure: EG_LINKABLE_FIGURE
+			a_linkable_figure: detachable EG_LINKABLE_FIGURE
 		do
 			a_linkable_figure ?= items_to_figure_lookup_table.item (a_linkable)
 			Result := a_linkable_figure /= Void
@@ -152,7 +152,7 @@ feature -- Status Report
 		require
 			a_link_not_void: a_link /= Void
 		local
-			a_link_figure: EG_LINK_FIGURE
+			a_link_figure: detachable EG_LINK_FIGURE
 		do
 			a_link_figure ?= items_to_figure_lookup_table.item (a_link)
 			Result := a_link_figure /= Void
@@ -163,7 +163,7 @@ feature -- Status Report
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
-			a_cluster_figure: EG_CLUSTER_FIGURE
+			a_cluster_figure: detachable EG_CLUSTER_FIGURE
 		do
 			a_cluster_figure ?= items_to_figure_lookup_table.item (a_cluster)
 			Result := a_cluster_figure /= Void
@@ -188,7 +188,7 @@ feature -- Status Report
 
 feature -- Access
 
-	figure_from_model (an_item: EG_ITEM): EG_FIGURE
+	figure_from_model (an_item: EG_ITEM): detachable EG_FIGURE
 			-- Return the view vor `an_item' if any.
 		require
 			an_item_not_void: an_item /= Void
@@ -236,7 +236,7 @@ feature -- Access
 			-- All clusters in `Current' not having a parent.
 		local
 			l_root: like root_cluster
-			l_item: EG_CLUSTER_FIGURE
+			l_item: detachable EG_CLUSTER_FIGURE
 		do
 			from
 				l_root := root_cluster
@@ -525,9 +525,9 @@ feature -- Element change
 			a_node_not_void: a_node /= Void
 			has_node: has_node_figure (a_node)
 		local
-			node_figure: EG_LINKABLE_FIGURE
+			node_figure: detachable EG_LINKABLE_FIGURE
 			l_links: ARRAYED_LIST [EG_LINK]
-			l_item: EG_LINK
+			l_item: detachable EG_LINK
 		do
 			node_figure ?= items_to_figure_lookup_table.item (a_node)
 			check
@@ -571,13 +571,13 @@ feature -- Element change
 			a_cluster_not_void: a_cluster /= Void
 			has_cluster: has_cluster_figure (a_cluster)
 		local
-			cluster_figure: EG_CLUSTER_FIGURE
+			cluster_figure: detachable EG_CLUSTER_FIGURE
 			linkables: ARRAYED_LIST [EG_LINKABLE]
 			l_item: EG_LINKABLE
-			l_cluster: EG_CLUSTER
-			l_node: EG_NODE
+			l_cluster: detachable EG_CLUSTER
+			l_node: detachable EG_NODE
 			l_links: ARRAYED_LIST [EG_LINK]
-			l_link: EG_LINK
+			l_link: detachable EG_LINK
 		do
 			cluster_figure ?= items_to_figure_lookup_table.item (a_cluster)
 			check
@@ -640,7 +640,7 @@ feature -- Element change
 		local
 			l_linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]
 			i, nb: INTEGER
-			cluster: EG_CLUSTER_FIGURE
+			cluster: detachable EG_CLUSTER_FIGURE
 			l_item: EG_FIGURE
 			l_links: ARRAYED_LIST [EG_LINK_FIGURE]
 			l_link: EG_LINK_FIGURE
@@ -721,8 +721,8 @@ feature -- Save/Restore
 		require
 			f_not_Void: f /= Void
 		local
-			diagram_input: XM_DOCUMENT
-			view_input: XM_ELEMENT
+			diagram_input: detachable XM_DOCUMENT
+			view_input: detachable XM_ELEMENT
 		do
 			diagram_input := Xml_routines.deserialize_document (f.name)
 			if diagram_input /= Void then
@@ -927,8 +927,8 @@ feature {NONE} -- Implementation
 			not_has_cluster: not has_cluster_figure (a_cluster)
 			non_linkable_already_part_of_view: not a_cluster.flat_linkables.there_exists (agent has_linkable_figure)
 		local
-			cur_cluster: EG_CLUSTER
-			cur_node: like node_type
+			cur_cluster: detachable EG_CLUSTER
+			cur_node: detachable like node_type
 		do
 			from
 				a_cluster.linkables.start
@@ -970,7 +970,7 @@ feature {NONE} -- Implementation
 		require
 			figure_not_void: figure /= Void
 		local
-			cluster_figure: EG_CLUSTER_FIGURE
+			cluster_figure: detachable EG_CLUSTER_FIGURE
 		do
 			if figure.cluster = Void then
 				bring_to_front (figure)
@@ -1016,8 +1016,8 @@ feature {NONE} -- Implementation
 			l_selected_figures: like selected_figures
 			l_item: EG_FIGURE
 			i, nb: INTEGER
-			cf: EG_CLUSTER_FIGURE
-			l_linkable: EG_LINKABLE_FIGURE
+			cf: detachable EG_CLUSTER_FIGURE
+			l_linkable: detachable EG_LINKABLE_FIGURE
 		do
 			cf ?= figure
 			if cf = Void and then not selected_figures.is_empty then
@@ -1180,7 +1180,12 @@ feature {NONE} -- Implementation
 
 	node_type: EG_NODE
 			-- Type for nodes.
+		local
+			l_result: detachable like node_type
 		do
+			check anchor_type_only: False end
+			check l_result /= Void end -- Satisfy void-safe compiler
+			Result := l_result
 		end
 
 invariant

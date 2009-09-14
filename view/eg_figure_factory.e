@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			until
 				nodes.after or else Result /= Void
 			loop
-				if nodes.item.name.is_equal (a_name) then
+				if nodes.item.name ~ a_name then
 					Result := nodes.item
 				end
 				nodes.forth
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 				until
 					clusters.after or else Result /= Void
 				loop
-					if clusters.item.name.is_equal (a_name) then
+					if clusters.item.name ~ a_name then
 						Result := clusters.item
 					end
 					clusters.forth

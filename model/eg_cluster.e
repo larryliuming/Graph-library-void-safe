@@ -140,8 +140,8 @@ feature -- Element change
 			a_cluster: detachable EG_CLUSTER
 			a_node: detachable like node_type
 		do
-			if a_linkable.cluster /= Void then
-				a_linkable.cluster.prune_all (a_linkable)
+			if attached a_linkable.cluster as l_cluster then
+				l_cluster.prune_all (a_linkable)
 			end
 			linkables.extend (a_linkable)
 			a_linkable.set_cluster (Current)

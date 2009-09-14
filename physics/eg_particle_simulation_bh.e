@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			last_theta_average := 0.0
 			theta_count := 0
 			if attached quad_tree as l_quad_tree then
-				Result := traverse_tree (quad_tree, a_particle)
+				Result := traverse_tree (l_quad_tree, a_particle)
 			else
 				check False end -- FIXME: Implied by ...
 			end
