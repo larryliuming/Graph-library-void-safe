@@ -40,7 +40,7 @@ feature -- Access
 			Result := internal_hash_id
 		end
 
-	name: STRING
+	name: detachable STRING
 			-- Name of `Current'.
 
 	set_name (a_name: STRING)

@@ -34,7 +34,7 @@ feature -- Access
 			-- Return all linkables containing in `Current'
 			-- including all linkables containing in sub clusters.
 		local
-			l_cluster: like Current
+			l_cluster: detachable like Current
 		do
 			Result := linkables.twin
 			from
@@ -55,7 +55,7 @@ feature -- Access
 	sub_clusters: ARRAYED_LIST [like Current]
 			-- Sub clusters (top level) of Current.
 		local
-			l_cluster: like Current
+			l_cluster: detachable like Current
 		do
 			create Result.make (10)
 			from
@@ -76,7 +76,7 @@ feature -- Access
 	sub_nodes: ARRAYED_LIST [like node_type]
 			-- Nodes (top level) of Current.
 		local
-			l_node: like node_type
+			l_node: detachable like node_type
 		do
 			create Result.make (10)
 			from
@@ -137,8 +137,8 @@ feature -- Element change
 			a_linkable_not_void: a_linkable /= Void
 			not_has_a_linkable: not has (a_linkable)
 		local
-			a_cluster: EG_CLUSTER
-			a_node: like node_type
+			a_cluster: detachable EG_CLUSTER
+			a_node: detachable like node_type
 		do
 			if a_linkable.cluster /= Void then
 				a_linkable.cluster.prune_all (a_linkable)
@@ -146,14 +146,14 @@ feature -- Element change
 			linkables.extend (a_linkable)
 			a_linkable.set_cluster (Current)
 
-			if graph /= Void and then not graph.has_linkable (a_linkable) then
+			if attached graph as l_graph and then not l_graph.has_linkable (a_linkable) then
 				a_cluster ?= a_linkable
 				if a_cluster /= Void then
-					graph.add_cluster (a_cluster)
+					l_graph.add_cluster (a_cluster)
 				else
 					a_node ?= a_linkable
 					if a_node /= Void then
-						graph.add_node (a_node)
+						l_graph.add_node (a_node)
 					end
 				end
 			end

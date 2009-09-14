@@ -77,15 +77,24 @@ feature -- Basic operations
 
 	product alias "*" (other: like Current): like Current
 			-- Product by `other'
+		local
+			l_result: detachable like product
 		do
 			check
 				implement: False
 			end
+			check l_result /= Void end -- Satisfy void-safe compiler
+			Result := l_result
 		end
 
 	quotient alias "/" (other: like Current): like Current
 			-- Division by `other'
+		local
+			l_result: detachable like quotient
 		do
+			check implement: False end
+			check l_result /= Void end -- Satisfy void-safe compiler
+			Result := l_result
 		end
 
 	identity alias "+": like Current

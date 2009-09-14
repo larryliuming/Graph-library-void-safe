@@ -31,7 +31,7 @@ feature -- Access
 			Result := name
 		end
 
-	cluster: EG_CLUSTER
+	cluster: detachable EG_CLUSTER
 			-- cluster `Current' is part of.
 
 	links: like internal_links
