@@ -41,10 +41,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	corresponding_point: EV_COORDINATE
+	corresponding_point: detachable EV_COORDINATE
 			-- Point on line `Current' is an edge handler for.
 
-	corresponding_line: EG_POLYLINE_LINK_FIGURE
+	corresponding_line: detachable EG_POLYLINE_LINK_FIGURE
 			-- Line `Current' is part of.
 
 feature {EG_POLYLINE_LINK_FIGURE} -- Element change
@@ -58,10 +58,6 @@ feature {EG_POLYLINE_LINK_FIGURE} -- Element change
 		ensure
 			corresponding_point_assigned: corresponding_point = a_corresponding_point
 		end
-
-
-invariant
-	corresponding_point_not_void: corresponding_point /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
