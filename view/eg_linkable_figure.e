@@ -22,7 +22,7 @@ inherit
 			set_with_xml_element,
 			recycle
 		end
-		
+
 	EG_PARTICLE
 		rename
 			x as port_x,
@@ -32,7 +32,7 @@ inherit
 			port_x,
 			port_y
 		end
-		
+
 feature {NONE} -- Initialisation
 
 	default_create
@@ -45,12 +45,12 @@ feature {NONE} -- Initialisation
 			set_dt (1)
 			mass := 1.0
 		end
-		
+
 feature -- Status report
 
 	is_fixed: BOOLEAN
 			-- Does the layouter not move `Current'?
-			
+
 	has_visible_link: BOOLEAN
 			-- Has `Current' at least one visible link?
 		local
@@ -72,7 +72,7 @@ feature -- Status report
 				end
 			end
 		end
-		
+
 	is_cluster_above: BOOLEAN
 			-- Is a cluster above `Current'?
 		local
@@ -80,7 +80,7 @@ feature -- Status report
 			l_bbox: like size
 			i, nb: INTEGER
 		do
-			from	
+			from
 				l_bbox := size
 				p := cluster
 			until
@@ -107,20 +107,20 @@ feature -- Access
 
 	cluster: EG_CLUSTER_FIGURE
 			-- Cluster figure `Current' is part of.
-	
+
 	model: EG_LINKABLE
 			-- The model for `Current'.
-			
+
 	port_x: INTEGER
 			-- x position where links are starting.
 		deferred
 		end
-		
+
 	port_y: INTEGER
 			-- y position where links are starting.
 		deferred
 		end
-		
+
 	xml_node_name: STRING
 			-- Name of the xml node returned by `xml_element'.
 		do
@@ -130,7 +130,7 @@ feature -- Access
 	is_fixed_string: STRING = "IS_FIXED"
 	port_x_string: STRING = "PORT_X"
 	port_y_string: STRING = "PORT_Y"
-		
+
 	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml element representing `Current's state.
 		local
@@ -142,7 +142,7 @@ feature -- Access
 			Result.put_last (l_xml_routines.xml_node (Result, port_x_string, port_x.out))
 			Result.put_last (l_xml_routines.xml_node (Result, port_y_string, port_y.out))
 		end
-		
+
 	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
@@ -152,7 +152,7 @@ feature -- Access
 			Precursor {EG_FIGURE} (node)
 			l_xml_routines := xml_routines
 			set_is_fixed (l_xml_routines.xml_boolean (node, is_fixed_string))
-			
+
 			ax := l_xml_routines.xml_integer (node, port_x_string)
 			ay := l_xml_routines.xml_integer (node, port_y_string)
 			set_port_position (ax, ay)
@@ -164,14 +164,14 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	height: INTEGER
 			-- Height in pixels.
 		deferred
 		ensure
 			result_not_negative: Result >= 0
 		end
-		
+
 	width: INTEGER
 			-- Width in pixels.
 		deferred
@@ -223,24 +223,24 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
-	number_of_figures: INTEGER 
+
+	number_of_figures: INTEGER
 			-- number of figures used to visialize `Current'.
 		deferred
 		ensure
 			result_greater_equal_zero: Result >= 0
 		end
-		
+
 	links: like internal_links
 			-- Links to other linkables
 		do
 			Result := internal_links.twin
 		end
-		
+
 feature -- Status settings
 
 	request_update
-			-- 
+			--
 		local
 			l_internal_links: like internal_links
 		do
@@ -258,7 +258,7 @@ feature -- Status settings
 				l_internal_links.forth
 			end
 		end
-		
+
 feature -- Element change
 
 	recycle
@@ -279,10 +279,10 @@ feature -- Element change
 			d_y := ay - port_y
 			set_x_y (x + d_x, y + d_y)
 		end
-		
+
 	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE)
-			-- Move `p' to a point on the edge of `Current' 
-			-- where the outline intersects a line from the 
+			-- Move `p' to a point on the edge of `Current'
+			-- where the outline intersects a line from the
 			-- center point in direction `an_angle'.
 		require
 			p_not_void: p /= Void
@@ -290,7 +290,7 @@ feature -- Element change
 		ensure
 			p_not_void: p /= Void
 		end
-		
+
 feature -- Status settings
 
 	set_is_fixed (b: BOOLEAN)
@@ -302,7 +302,7 @@ feature -- Status settings
 		end
 
 feature {EG_FIGURE_WORLD} -- Element change
-		
+
 	add_link (a_link: EG_LINK_FIGURE)
 			-- add `a_link' to `links'.
 		require
@@ -314,7 +314,7 @@ feature {EG_FIGURE_WORLD} -- Element change
 		ensure
 			links_has_a_link: links.has (a_link)
 		end
-		
+
 	remove_link (a_link: EG_LINK_FIGURE)
 			-- Remove `a_link' from `links'.
 		require
@@ -324,10 +324,10 @@ feature {EG_FIGURE_WORLD} -- Element change
 		ensure
 			links_not_has_a_link: not links.has (a_link)
 		end
-		
+
 feature {EG_CLUSTER_FIGURE, EG_FIGURE_WORLD} -- Element change
 
-	set_cluster (a_cluster: EG_CLUSTER_FIGURE)
+	set_cluster (a_cluster: detachable EG_CLUSTER_FIGURE)
 			-- set `cluster' to `a_cluster' without adding `Current' to `a_cluster'.
 		do
 			if a_cluster = Void then
@@ -359,7 +359,7 @@ feature {EG_LAYOUT, EG_FIGURE} -- Implementation
 
 	internal_links: ARRAYED_LIST [EG_LINK_FIGURE]
 			-- links to other figures.
-		
+
 feature {NONE} -- Implementation
 
 	on_handle_start
@@ -368,13 +368,13 @@ feature {NONE} -- Implementation
 			was_fixed := is_fixed
 			set_is_fixed (True)
 		end
-		
+
 	on_handle_end
 			-- User ended to move `Current'.
 		do
 			set_is_fixed (was_fixed)
 		end
-		
+
 	was_fixed: BOOLEAN
 
 invariant

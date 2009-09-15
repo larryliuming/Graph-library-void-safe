@@ -184,9 +184,17 @@ feature {EG_GRAPH, EG_FIGURE_WORLD, EG_FIGURE_FACTORY} -- Implementation
 
 feature {NONE} -- Node type
 
-	node_type: EG_NODE;
+	node_type: EG_NODE
+			-- Anchor type
+		local
+			l_result: detachable like node_type
+		do
+			check anchor_type_only: False end
+			check l_result /= Void end -- Satisfy void-safe compiler
+			Result := l_result
+		end
 
-note
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

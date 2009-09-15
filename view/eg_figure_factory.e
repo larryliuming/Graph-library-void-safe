@@ -73,9 +73,12 @@ feature {NONE} -- Implementation
 		local
 			nodes: LIST [EG_NODE]
 			clusters: LIST [EG_CLUSTER]
+			l_world: like world
 		do
 			from
-				nodes := world.model.flat_nodes
+				l_world := world
+				check l_world /= Void end -- Implied by precondition `world_not_void'
+				nodes := l_world.model.flat_nodes
 				nodes.start
 			until
 				nodes.after or else Result /= Void
@@ -87,7 +90,7 @@ feature {NONE} -- Implementation
 			end
 			if Result = Void then
 				from
-					clusters := world.model.flat_clusters
+					clusters := l_world.model.flat_clusters
 					clusters.start
 				until
 					clusters.after or else Result /= Void

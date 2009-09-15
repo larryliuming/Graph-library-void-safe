@@ -19,9 +19,9 @@ inherit
 			set_with_xml_element,
 			recycle
 		end
-		
+
 feature {NONE} -- Initialization
-	
+
 	initialize
 			-- Initialize `Current' (synchronize with model).
 		do
@@ -34,20 +34,20 @@ feature -- Access
 
 	model: EG_CLUSTER
 			-- The model for `Current'.
-			
+
 	layouter: EG_LAYOUT
 			-- Layouter used for this `Cluster' if not Void
-			
+
 	xml_node_name: STRING
 			-- Name of the xml node returned by `xml_element'.
 		do
 			Result := once "EG_CLUSTER_FIGURE"
 		end
-		
+
 	subclusters: ARRAYED_LIST [EG_CLUSTER_FIGURE]
 			-- Clusters with parent `Current'.
 		local
-			l_item: EG_CLUSTER_FIGURE
+			l_item: detachable EG_CLUSTER_FIGURE
 		do
 			from
 				create {ARRAYED_LIST [EG_CLUSTER_FIGURE]} Result.make (1)
@@ -68,7 +68,7 @@ feature -- Access
 	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml element representing `Current's state.
 		local
-			eg_fig: EG_LINKABLE_FIGURE
+			eg_fig: detachable EG_LINKABLE_FIGURE
 			fig, elements: XM_ELEMENT
 		do
 			Result := Precursor {EG_LINKABLE_FIGURE} (node)
@@ -87,17 +87,17 @@ feature -- Access
 			end
 			Result.put_last (elements)
 		end
-		
+
 	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
-			elements: XM_ELEMENT
+			elements: detachable XM_ELEMENT
 			l_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			l_item: XM_ELEMENT
-			eg_model: EG_LINKABLE
-			eg_cluster: EG_CLUSTER
-			eg_node: EG_NODE
-			fig: EG_FIGURE
+			l_item: detachable XM_ELEMENT
+			eg_model: detachable EG_LINKABLE
+			eg_cluster: detachable EG_CLUSTER
+			eg_node: detachable EG_NODE
+			fig: detachable EG_FIGURE
 		do
 			Precursor {EG_LINKABLE_FIGURE} (node)
 			elements ?= node.item_for_iteration
@@ -141,7 +141,7 @@ feature -- Access
 				l_cursor.forth
 			end
 		end
-			
+
 feature -- Element change
 
 	recycle
@@ -161,13 +161,13 @@ feature -- Element change
 		ensure
 			set: layouter = a_layouter
 		end
-		
+
 feature -- Status settings
 
 	set_is_fixed (b: BOOLEAN)
 			-- Set `is_fixed' to `b'
 		local
-			linkable_figure: EG_LINKABLE_FIGURE
+			linkable_figure: detachable EG_LINKABLE_FIGURE
 		do
 			Precursor {EG_LINKABLE_FIGURE} (b)
 			from
@@ -182,14 +182,14 @@ feature -- Status settings
 				forth
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	on_linkable_add (a_linkable: EG_LINKABLE)
 			-- `a_linkable' was added to the cluster.
 		local
 			l_world: like world
-			linkable_fig: EG_LINKABLE_FIGURE
+			linkable_fig: detachable EG_LINKABLE_FIGURE
 		do
 			l_world := world
 			if world /= Void then
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			-- `a_linkable' was removed from the cluster.
 		local
 			l_world: like world
-			linkable_fig: EG_LINKABLE_FIGURE
+			linkable_fig: detachable EG_LINKABLE_FIGURE
 		do
 			l_world := world
 			if world /= Void then

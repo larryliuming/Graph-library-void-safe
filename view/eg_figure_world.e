@@ -77,6 +77,8 @@ feature {NONE} -- Initialization
 		local
 			i_cluster: EG_CLUSTER
 		do
+			default_create
+			
 			model := a_model
 			set_factory (a_factory)
 			default_create
@@ -431,17 +433,19 @@ feature -- Element change
 			has_target_figure: has_linkable_figure (a_link.target)
 		local
 			link_figure: EG_LINK_FIGURE
-			source, target: EG_LINKABLE_FIGURE
+			source, target: detachable EG_LINKABLE_FIGURE
 		do
 			link_figure := factory.new_link_figure (a_link)
 			put_front (link_figure)
 			links.extend (link_figure)
 
 			source ?= items_to_figure_lookup_table.item (a_link.source)
+			check source /= Void end --FIXME: Implied by...?
 			link_figure.set_source (source)
 			source.add_link (link_figure)
 
 			target ?= items_to_figure_lookup_table.item (a_link.target)
+			check target /= Void end --FIXME: Implied by...?
 			link_figure.set_target (target)
 			target.add_link (link_figure)
 
@@ -490,7 +494,7 @@ feature -- Element change
 			a_link_not_void: a_link /= Void
 			has_a_link: has_link_figure (a_link)
 		local
-			link_figure: EG_LINK_FIGURE
+			link_figure: detachable EG_LINK_FIGURE
 		do
 			link_figure ?= items_to_figure_lookup_table.item (a_link)
 			check
@@ -502,8 +506,8 @@ feature -- Element change
 			if link_figure.target /= Void then
 				link_figure.target.remove_link (link_figure)
 			end
-			if link_figure.group /= Void then
-				link_figure.group.prune_all (link_figure)
+			if attached link_figure.group as l_group then
+				l_group.prune_all (link_figure)
 			end
 			links.prune_all (link_figure)
 			items_to_figure_lookup_table.remove (a_link)
@@ -790,14 +794,14 @@ feature -- Save/Restore
 	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
-			l_item: XM_ELEMENT
+			l_item: detachable XM_ELEMENT
 			sf: DOUBLE
-			l_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			eg_item: EG_ITEM
-			eg_node: EG_NODE
-			eg_cluster: EG_CLUSTER
-			eg_link: EG_LINK
-			eg_fig: EG_FIGURE
+			l_cursor: detachable DS_LINKED_LIST_CURSOR [XM_NODE]
+			eg_item: detachable EG_ITEM
+			eg_node: detachable EG_NODE
+			eg_cluster: detachable EG_CLUSTER
+			eg_link: detachable EG_LINK
+			eg_fig: detachable EG_FIGURE
 
 			l_nodes: like nodes
 			l_node: EG_LINKABLE_FIGURE
@@ -813,6 +817,7 @@ feature -- Save/Restore
 			scale (sf / scale_factor)
 			from
 				l_item ?= node.item_for_iteration
+				check l_item /= Void end -- FIXME: Implied by ...?
 				l_cursor ?= l_item.new_cursor
 				node.forth
 				l_cursor.start
@@ -1113,7 +1118,7 @@ feature {NONE} -- Implementation
 				figure_change_end_actions.call (Void)
 				is_figure_moved := False
 			end
-			
+
 			--FIXME: Conflict with invariant `selected_figures_not_void'
 --			selected_figure := Void
 		end
@@ -1154,8 +1159,8 @@ feature {NONE} -- Implementation
 			cluster_not_void: cluster /= Void
 		local
 			l_item: EV_MODEL
-			l_cluster: EG_CLUSTER_FIGURE
-			l_fig: EG_FIGURE
+			l_cluster: detachable EG_CLUSTER_FIGURE
+			l_fig: detachable EG_FIGURE
 			i: INTEGER
 		do
 			from

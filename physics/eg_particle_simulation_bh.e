@@ -92,14 +92,18 @@ feature {NONE} -- Implementation
 
 	n_body_force_solver (a_particle: like particle_type): G
 			-- Solve n_nody_force O(log n) best case O(n) worste case
+		local
+			l_result: detachable like n_body_force_solver
 		do
 			last_theta_average := 0.0
 			theta_count := 0
 			if attached quad_tree as l_quad_tree then
-				Result := traverse_tree (l_quad_tree, a_particle)
+				l_result := traverse_tree (l_quad_tree, a_particle)
 			else
 				check False end -- FIXME: Implied by ...
 			end
+			check l_result /= Void end -- Implied by previsous if cluase and postcondition of `traverse_tree'
+			Result := l_result
 			if theta_count > 0 then
 				last_theta_average := last_theta_average / theta_count
 			end
