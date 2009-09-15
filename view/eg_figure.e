@@ -37,14 +37,18 @@ feature {NONE} -- Initialization
 			-- Initialize `Current' (synchronize with model).
 		require
 			model_not_void: model /= Void
+		local
+			l_model: like model
 		do
-			if attached model.name as l_name then
+			l_model := model
+			check l_model /= Void end -- Implied by precondition `model_not_void'
+			if attached l_model.name as l_name then
 				set_name_label_text (l_name)
 			else
 				name_label.set_text (once "")
 				name_label.hide
 			end
-			model.name_change_actions.extend (agent on_name_change)
+			l_model.name_change_actions.extend (agent on_name_change)
 		end
 
 feature -- Access
@@ -56,7 +60,7 @@ feature -- Access
 			Result := True
 		end
 
-	model: EG_ITEM
+	model: detachable EG_ITEM
 			-- The model for `Current'
 
 	world: detachable EG_FIGURE_WORLD
@@ -71,8 +75,8 @@ feature -- Access
 			l_xml_routines: like xml_routines
 		do
 			l_xml_routines := xml_routines
-			if model.name /= Void then
-				node.add_attribute (name_string, xml_namespace, model.name)
+			if attached model.name as l_name then
+				node.add_attribute (name_string, xml_namespace, l_name)
 			end
 			node.put_last (l_xml_routines.xml_node (node, is_selected_string, boolean_representation (is_selected)))
 			node.put_last (l_xml_routines.xml_node (node, is_label_shown_string, boolean_representation (is_label_shown)))
@@ -98,6 +102,7 @@ feature -- Access
 				check l_attribute /= Void end -- Implied by `has_attribute_by_name'
 				l_name := l_attribute.value
 				l_model := model
+				check l_model /= Void end -- FIXME: Implied by ...?
 				if l_model.name = Void or else not l_model.name ~ (l_name) then
 					l_model.set_name (l_name)
 				end
@@ -141,8 +146,8 @@ feature -- Element change
 			-- Free resources of `Current' such that GC can collect it.
 			-- Leave it in an unstable state.
 		do
-			if model /= Void then
-				model.name_change_actions.prune_all (agent on_name_change)
+			if attached model as l_model then
+				l_model.name_change_actions.prune_all (agent on_name_change)
 			end
 		end
 
@@ -218,7 +223,7 @@ feature {NONE} -- Implementation
 	on_name_change
 			-- Name was changed in the model.
 		do
-			if attached model.name as l_name then
+			if (attached model as l_model) and then (attached l_model.name as l_name) then
 				if name_label.text.is_equal ("") and not is_label_shown then
 					name_label.show
 				end
@@ -235,7 +240,7 @@ feature {NONE} -- Implementation
 		require
 			a_text_not_void: a_text /= Void
 			model_not_void: model /= Void
-			a_text_equal_model_text: model.name = a_text
+			a_text_equal_model_text: attached model as l_model and then l_model.name = a_text
 		do
 			name_label.set_text (a_text)
 		end

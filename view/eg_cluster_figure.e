@@ -35,7 +35,7 @@ feature -- Access
 	model: EG_CLUSTER
 			-- The model for `Current'.
 
-	layouter: EG_LAYOUT
+	layouter: detachable EG_LAYOUT
 			-- Layouter used for this `Cluster' if not Void
 
 	xml_node_name: STRING
@@ -111,7 +111,7 @@ feature -- Access
 			loop
 				l_item ?= l_cursor.item
 				if l_item /= Void then
-					eg_model ?= world.factory.model_from_xml (l_item)
+					eg_model ?= world.attached_factory.model_from_xml (l_item)
 					if eg_model /= Void then
 						if not world.model.has_linkable (eg_model) then
 							eg_cluster ?= eg_model

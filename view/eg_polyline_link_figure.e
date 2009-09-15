@@ -168,7 +168,8 @@ feature -- Access
 	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
-			edges, l_item: XM_ELEMENT
+			edges: XM_ELEMENT
+			l_item: XM_ELEMENT
 			l_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			ax, ay: INTEGER
 			l_x_pos_string, l_y_pos_string: STRING
@@ -190,6 +191,7 @@ feature -- Access
 			if is_reflexive then
 				if not l_cursor.after then
 					l_item ?= l_cursor.item
+					check l_item /= Void end -- FIXME: Implied by ...?
 					l_item.start
 					ax := l_xml_routines.xml_integer (l_item, l_x_pos_string)
 					ay := l_xml_routines.xml_integer (l_item, l_y_pos_string)
@@ -197,6 +199,7 @@ feature -- Access
 
 					l_cursor.forth
 					l_item ?= l_cursor.item
+					check l_item /= Void end -- FIXME: Implied by ...?
 					l_item.start
 					ax := l_xml_routines.xml_integer (l_item, l_x_pos_string)
 					ay := l_xml_routines.xml_integer (l_item, l_y_pos_string)
@@ -208,6 +211,7 @@ feature -- Access
 					l_cursor.after
 				loop
 					l_item ?= l_cursor.item
+					check l_item /= Void end -- FIXME: Implied by ...?
 					l_item.start
 					l_edges_count := edges_count
 					add_point_between (l_edges_count + 1, l_edges_count + 2)

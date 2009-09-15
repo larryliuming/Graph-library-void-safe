@@ -53,10 +53,10 @@ feature -- Element change
 			loop
 				cluster_figure ?= root.item
 				if cluster_figure /= Void then
-					if cluster_figure.layouter = Void then
-						layout_cluster (cluster_figure, 2)
+					if attached cluster_figure.layouter as l_layouter then
+						l_layouter.layout_cluster (cluster_figure, 2)
 					else
-						cluster_figure.layouter.layout_cluster (cluster_figure, 2)
+						layout_cluster (cluster_figure, 2)
 					end
 				end
 				root.forth
@@ -85,10 +85,10 @@ feature -- Element change
 					figures_in_cluster.extend (linkable_figure)
 					cluster_figure ?= linkable_figure
 					if cluster_figure /= Void then
-						if cluster_figure.layouter = Void then
-							layout_cluster (cluster_figure, level + 1)
+						if attached cluster_figure.layouter as l_layouter then
+							l_layouter.layout_cluster (cluster_figure, level + 1)
 						else
-							cluster_figure.layouter.layout_cluster (cluster_figure, level + 1)
+							layout_cluster (cluster_figure, level + 1)
 						end
 					end
 				end

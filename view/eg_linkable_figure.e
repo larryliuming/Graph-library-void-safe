@@ -38,8 +38,8 @@ feature {NONE} -- Initialisation
 	default_create
 			-- Create a EG_LINKABLE_FIGURE.
 		do
-			Precursor {EG_FIGURE}
 			create internal_links.make (0)
+			Precursor {EG_FIGURE}
 			start_actions.extend (agent on_handle_start)
 			end_actions.extend (agent on_handle_end)
 			set_dt (1)
@@ -76,7 +76,7 @@ feature -- Status report
 	is_cluster_above: BOOLEAN
 			-- Is a cluster above `Current'?
 		local
-			p, q: EG_CLUSTER_FIGURE
+			p, q: detachable EG_CLUSTER_FIGURE
 			c: detachable EG_CLUSTER_FIGURE
 			l_bbox: like size
 			i, nb: INTEGER
@@ -246,8 +246,8 @@ feature -- Status settings
 			l_internal_links: like internal_links
 		do
 			Precursor {EG_FIGURE}
-			if cluster /= Void then
-				cluster.request_update
+			if attached cluster as l_cluster then
+				l_cluster.request_update
 			end
 			from
 				l_internal_links := internal_links
@@ -343,8 +343,8 @@ feature {EG_CLUSTER_FIGURE, EG_FIGURE_WORLD} -- Element change
 			else
 				l_world.root_cluster.prune_all (Current)
 			end
-			if cluster /= Void then
-				cluster.prune_all (Current)
+			if attached cluster as l_cluster then
+				l_cluster.prune_all (Current)
 			end
 			cluster := a_cluster
 		ensure
