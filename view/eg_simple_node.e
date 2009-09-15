@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	model: EG_NODE
+	model: detachable EG_NODE
 			-- Model `Current' is a view for.
 
 	port_x: INTEGER

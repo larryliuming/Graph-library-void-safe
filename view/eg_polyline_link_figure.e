@@ -169,7 +169,7 @@ feature -- Access
 			-- Retrive state from `node'.
 		local
 			edges: XM_ELEMENT
-			l_item: XM_ELEMENT
+			l_item: detachable XM_ELEMENT
 			l_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			ax, ay: INTEGER
 			l_x_pos_string, l_y_pos_string: STRING

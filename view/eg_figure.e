@@ -73,9 +73,12 @@ feature -- Access
 			-- Xml node representing `Current's state.
 		local
 			l_xml_routines: like xml_routines
+			l_model: like model
 		do
 			l_xml_routines := xml_routines
-			if attached model.name as l_name then
+			l_model := model
+			check l_model /= Void end -- FIXME: Implied by ...?
+			if attached l_model.name as l_name then
 				node.add_attribute (name_string, xml_namespace, l_name)
 			end
 			node.put_last (l_xml_routines.xml_node (node, is_selected_string, boolean_representation (is_selected)))
@@ -103,7 +106,7 @@ feature -- Access
 				l_name := l_attribute.value
 				l_model := model
 				check l_model /= Void end -- FIXME: Implied by ...?
-				if l_model.name = Void or else not l_model.name ~ (l_name) then
+				if (l_model.name = Void) or else not l_model.name ~ (l_name) then
 					l_model.set_name (l_name)
 				end
 				node.forth

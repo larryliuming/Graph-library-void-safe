@@ -38,6 +38,8 @@ feature {NONE} -- Initialization
 		require
 			a_model_not_void: a_model /= Void
 		do
+			create rectangle -- Satisfy invariant
+			
 			default_create
 			model := a_model
 			initialize

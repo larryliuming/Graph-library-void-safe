@@ -109,7 +109,7 @@ feature -- Access
 	cluster: detachable EG_CLUSTER_FIGURE
 			-- Cluster figure `Current' is part of.
 
-	model: EG_LINKABLE
+	model: detachable EG_LINKABLE
 			-- The model for `Current'.
 
 	port_x: INTEGER
