@@ -10,7 +10,7 @@ deferred class
 
 feature -- Access
 
-	world: EG_FIGURE_WORLD
+	world: detachable EG_FIGURE_WORLD
 			-- World `Current' is a factory for.
 
 	new_node_figure (a_node: EG_NODE): EG_LINKABLE_FIGURE
