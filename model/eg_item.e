@@ -43,7 +43,7 @@ feature -- Access
 	name: detachable STRING
 			-- Name of `Current'.
 
-	set_name (a_name: STRING)
+	set_name (a_name: detachable STRING)
 			-- Set `name' to `a_name'.
 		do
 			if a_name /= name then

@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 		require
 			model_not_void: model /= Void
 		do
-			if model.name /= Void then
-				set_name_label_text (model.name)
+			if attached model.name as l_name then
+				set_name_label_text (l_name)
 			else
 				name_label.set_text (once "")
 				name_label.hide
@@ -59,7 +59,7 @@ feature -- Access
 	model: EG_ITEM
 			-- The model for `Current'
 
-	world: EG_FIGURE_WORLD
+	world: detachable EG_FIGURE_WORLD
 			-- The world `Current' is part of.
 		do
 			Result ?= Precursor {EV_MODEL_MOVE_HANDLE}
@@ -90,12 +90,15 @@ feature -- Access
 			l_name: STRING
 			l_xml_routines: like xml_routines
 			l_model: like model
+			l_attribute: detachable XM_ATTRIBUTE
 		do
 			l_xml_routines := xml_routines
 			if node.has_attribute_by_name (name_string) then
-				l_name := node.attribute_by_name (name_string).value
+				l_attribute := node.attribute_by_name (name_string)
+				check l_attribute /= Void end -- Implied by `has_attribute_by_name'
+				l_name := l_attribute.value
 				l_model := model
-				if l_model.name = Void or else not l_model.name.is_equal (l_name) then
+				if l_model.name = Void or else not l_model.name ~ (l_name) then
 					l_model.set_name (l_name)
 				end
 				node.forth
@@ -215,13 +218,13 @@ feature {NONE} -- Implementation
 	on_name_change
 			-- Name was changed in the model.
 		do
-			if model.name = Void then
-				name_label.hide
-			else
+			if attached model.name as l_name then
 				if name_label.text.is_equal ("") and not is_label_shown then
 					name_label.show
 				end
-				set_name_label_text (model.name)
+				set_name_label_text (l_name)
+			else
+				name_label.hide
 			end
 			request_update
 		end

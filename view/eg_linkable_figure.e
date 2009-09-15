@@ -76,7 +76,8 @@ feature -- Status report
 	is_cluster_above: BOOLEAN
 			-- Is a cluster above `Current'?
 		local
-			p, q, c: EG_CLUSTER_FIGURE
+			p, q: EG_CLUSTER_FIGURE
+			c: detachable EG_CLUSTER_FIGURE
 			l_bbox: like size
 			i, nb: INTEGER
 		do
@@ -105,7 +106,7 @@ feature -- Status report
 
 feature -- Access
 
-	cluster: EG_CLUSTER_FIGURE
+	cluster: detachable EG_CLUSTER_FIGURE
 			-- Cluster figure `Current' is part of.
 
 	model: EG_LINKABLE
@@ -329,12 +330,18 @@ feature {EG_CLUSTER_FIGURE, EG_FIGURE_WORLD} -- Element change
 
 	set_cluster (a_cluster: detachable EG_CLUSTER_FIGURE)
 			-- set `cluster' to `a_cluster' without adding `Current' to `a_cluster'.
+		require
+			ready: attached world
+		local
+			l_world: like world
 		do
+			l_world := world
+			check l_world /= Void end -- Implied by precondition `ready'
 			if a_cluster = Void then
-				world.root_cluster.extend (Current)
-				world.extend (Current)
+				l_world.root_cluster.extend (Current)
+				l_world.extend (Current)
 			else
-				world.root_cluster.prune_all (Current)
+				l_world.root_cluster.prune_all (Current)
 			end
 			if cluster /= Void then
 				cluster.prune_all (Current)

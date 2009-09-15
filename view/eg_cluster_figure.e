@@ -102,6 +102,7 @@ feature -- Access
 			Precursor {EG_LINKABLE_FIGURE} (node)
 			elements ?= node.item_for_iteration
 			node.forth
+			check elements /= Void end -- FIXME: Implied by ...?
 			l_cursor := elements.new_cursor
 			from
 				l_cursor.start
@@ -192,8 +193,8 @@ feature {NONE} -- Implementation
 			linkable_fig: detachable EG_LINKABLE_FIGURE
 		do
 			l_world := world
-			if world /= Void then
-				linkable_fig ?= world.items_to_figure_lookup_table.item (a_linkable)
+			if l_world /= Void then
+				linkable_fig ?= l_world.items_to_figure_lookup_table.item (a_linkable)
 				check
 					linkable_fig_is_in_view_but_not_in_cluster: linkable_fig /= Void not has (linkable_fig)
 				end
