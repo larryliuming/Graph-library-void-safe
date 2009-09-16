@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 		local
 			i, nb: INTEGER
 			links: ARRAYED_LIST [EG_LINK_FIGURE]
-			an_other: like a_node
+			an_other: detachable like a_node
 			an_edge: EG_LINK_FIGURE
 			l_distance: DOUBLE
 		do

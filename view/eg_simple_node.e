@@ -40,6 +40,9 @@ feature {NONE} -- Initialization
 		require
 			a_model_not_void: a_model /= Void
 		do
+			-- Satisfy invariant
+			create node_figure
+
 			default_create
 			model := a_model
 			initialize

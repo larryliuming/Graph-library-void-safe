@@ -211,7 +211,8 @@ feature {NONE} -- Implementation
 			-- arrange `linkables'.
 		local
 			l_distance, l_force: DOUBLE
-			l_item, l_other: EG_LINKABLE_FIGURE
+			l_item: EG_LINKABLE_FIGURE
+			l_other: detachable EG_LINKABLE_FIGURE
 			links: ARRAYED_LIST [EG_LINK_FIGURE]
 			i, nb, j, nb2: INTEGER
 			move: DOUBLE
@@ -254,6 +255,7 @@ feature {NONE} -- Implementation
 								else
 									l_other := a_edge.source
 								end
+								check l_other /= Void end -- FIXME: Implied by...?
 								if l_other.is_show_requested then
 									opx := l_other.port_x
 									opy := l_other.port_y
@@ -327,7 +329,7 @@ feature {NONE} -- Implementation
 			-- Get the spring force between all of its adjacent nodes.
 		local
 			l_distance: DOUBLE
-			l_other: EG_LINKABLE_FIGURE
+			l_other: detachable EG_LINKABLE_FIGURE
 			l_weight: DOUBLE
 			npx, npy, opx, opy: DOUBLE--INTEGER
 		do
@@ -336,6 +338,7 @@ feature {NONE} -- Implementation
 			else
 				l_other := a_edge.source
 			end
+			check l_other /= Void end -- FIXME: Implied by ...?
 			if l_other.is_show_requested then
 				npx := a_node.port_x
 				npy := a_node.port_y
@@ -359,7 +362,7 @@ feature {NONE} -- Implementation
 
 			nb: INTEGER
 			links: ARRAYED_LIST [EG_LINK_FIGURE]
-			a_other: like a_node
+			a_other: detachable like a_node
 			a_edge: EG_LINK_FIGURE
 			l_distance, l_distance2: DOUBLE
 			npx, npy: DOUBLE
@@ -443,7 +446,7 @@ feature {NONE} -- Implementation
 		local
 			i, nb: INTEGER
 			links: ARRAYED_LIST [EG_LINK_FIGURE]
-			a_other: like a_node
+			a_other: detachable like a_node
 			a_edge: EG_LINK_FIGURE
 			l_distance: DOUBLE
 			npx, npy: DOUBLE

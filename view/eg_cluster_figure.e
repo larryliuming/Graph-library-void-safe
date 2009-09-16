@@ -98,6 +98,7 @@ feature -- Access
 			eg_cluster: detachable EG_CLUSTER
 			eg_node: detachable EG_NODE
 			fig: detachable EG_FIGURE
+			l_world: like world
 		do
 			Precursor {EG_LINKABLE_FIGURE} (node)
 			elements ?= node.item_for_iteration
@@ -111,7 +112,9 @@ feature -- Access
 			loop
 				l_item ?= l_cursor.item
 				if l_item /= Void then
-					eg_model ?= world.attached_factory.model_from_xml (l_item)
+					l_world := world
+					check l_world /= Void end -- FIXME: Implied by ...?
+					eg_model ?= l_world.attached_factory.model_from_xml (l_item)
 					if eg_model /= Void then
 						if not world.model.has_linkable (eg_model) then
 							eg_cluster ?= eg_model

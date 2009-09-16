@@ -528,11 +528,11 @@ feature -- Element change
 			check
 				link_figure_not_void: link_figure /= Void
 			end
-			if link_figure.source /= Void then
-				link_figure.source.remove_link (link_figure)
+			if attached link_figure.source as l_source then
+				l_source.remove_link (link_figure)
 			end
-			if link_figure.target /= Void then
-				link_figure.target.remove_link (link_figure)
+			if attached link_figure.target as l_target then
+				l_target.remove_link (link_figure)
 			end
 			if attached link_figure.group as l_group then
 				l_group.prune_all (link_figure)
