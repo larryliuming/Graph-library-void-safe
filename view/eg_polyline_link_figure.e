@@ -32,9 +32,11 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create a EG_POLYLINE_LINK_FIGURE without dimension.
 		do
-			Precursor {EG_LINK_FIGURE}
 			create edge_move_handlers.make (0)
 			create line
+
+			Precursor {EG_LINK_FIGURE}
+
 			line.extend_point (create {EV_COORDINATE})
 			line.extend_point (create {EV_COORDINATE})
 			extend (line)

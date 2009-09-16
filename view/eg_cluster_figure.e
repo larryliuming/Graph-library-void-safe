@@ -24,15 +24,19 @@ feature {NONE} -- Initialization
 
 	initialize
 			-- Initialize `Current' (synchronize with model).
+		local
+			l_model: like model
 		do
 			Precursor {EG_LINKABLE_FIGURE}
-			model.linkable_add_actions.extend (agent on_linkable_add)
-			model.linkable_remove_actions.extend (agent on_linkable_remove)
+			l_model := model
+			check l_model /= Void end -- FIXME: Implied by ...?
+			l_model.linkable_add_actions.extend (agent on_linkable_add)
+			l_model.linkable_remove_actions.extend (agent on_linkable_remove)
 		end
 
 feature -- Access
 
-	model: EG_CLUSTER
+	model: detachable EG_CLUSTER
 			-- The model for `Current'.
 
 	layouter: detachable EG_LAYOUT
@@ -100,6 +104,7 @@ feature -- Access
 			fig: detachable EG_FIGURE
 			l_world: like world
 			l_model: detachable EG_GRAPH
+			l_model_2: like model
 		do
 			Precursor {EG_LINKABLE_FIGURE} (node)
 			elements ?= node.item_for_iteration
@@ -138,14 +143,17 @@ feature -- Access
 								end
 							end
 						end
-						if not model.has (eg_model) then
-							model.extend (eg_model)
+						l_model_2 := model
+						check l_model_2 /= Void end -- FIXME: Implied by ...?						
+						if not l_model_2.has (eg_model) then
+							l_model_2.extend (eg_model)
 						end
 						fig := l_world.figure_from_model (eg_model)
 						check
 							eg_model_inserted: eg_model /= Void
 						end
 						l_item.start
+						check fig /= Void end -- FIXME: Implied by ...?
 						fig.set_with_xml_element (l_item)
 					end
 				end
@@ -159,9 +167,9 @@ feature -- Element change
 			-- Free `Current's resources.
 		do
 			Precursor {EG_LINKABLE_FIGURE}
-			if model /= Void then
-				model.linkable_add_actions.prune_all (agent on_linkable_add)
-				model.linkable_remove_actions.prune_all (agent on_linkable_remove)
+			if attached model as l_model then
+				l_model.linkable_add_actions.prune_all (agent on_linkable_add)
+				l_model.linkable_remove_actions.prune_all (agent on_linkable_remove)
 			end
 		end
 

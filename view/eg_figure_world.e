@@ -499,6 +499,7 @@ feature -- Element change
 			a_cluster.flat_linkables.for_all (agent has_linkable_figure)
 		local
 			cluster_figure: EG_CLUSTER_FIGURE
+			l_model: detachable EG_CLUSTER
 		do
 			cluster_figure := attached_factory.new_cluster_figure (a_cluster)
 			extend (cluster_figure)
@@ -511,7 +512,9 @@ feature -- Element change
 			until
 				a_cluster.linkables.after
 			loop
-				cluster_figure.model.linkable_add_actions.call ([a_cluster.linkables.item])
+				l_model := cluster_figure.model
+				check l_model /= Void end -- FIXME: Implied by ...?				
+				l_model.linkable_add_actions.call ([a_cluster.linkables.item])
 				a_cluster.linkables.forth
 			end
 

@@ -98,6 +98,7 @@ feature -- Access
 			l_xml_routines: like xml_routines
 			l_model: like model
 			l_attribute: detachable XM_ATTRIBUTE
+			l_model_name: detachable STRING_8
 		do
 			l_xml_routines := xml_routines
 			if node.has_attribute_by_name (name_string) then
@@ -106,7 +107,8 @@ feature -- Access
 				l_name := l_attribute.value
 				l_model := model
 				check l_model /= Void end -- FIXME: Implied by ...?
-				if (l_model.name = Void) or else (not l_model.name ~ (l_name)) then
+				l_model_name := l_model.name
+				if (l_model_name = Void) or else not (l_model_name ~ (l_name)) then
 					l_model.set_name (l_name)
 				end
 				node.forth

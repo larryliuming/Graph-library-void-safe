@@ -12,7 +12,8 @@ inherit
 	EG_LINK_FIGURE
 		redefine
 			default_create,
-			xml_node_name
+			xml_node_name,
+			make_filled
 		end
 
 create
@@ -61,6 +62,14 @@ feature {NONE} -- Initialization
 			disable_rotating
 
 			update
+		end
+
+	make_filled (n: INTEGER_32)
+			-- <Precursor>
+		do
+			create line
+
+			Precursor {EG_LINK_FIGURE} (n)
 		end
 
 feature -- Access

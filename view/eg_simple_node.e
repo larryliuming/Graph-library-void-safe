@@ -14,7 +14,8 @@ inherit
 			update,
 			default_create,
 			xml_node_name,
-			model
+			model,
+			make_filled
 		end
 
 create
@@ -47,6 +48,14 @@ feature {NONE} -- Initialization
 			model := a_model
 			initialize
 			update
+		end
+
+	make_filled (n: INTEGER_32)
+			-- <Precursor>
+		do
+			create node_figure
+			
+			Precursor {EG_LINKABLE_FIGURE} (n)
 		end
 
 feature -- Access
