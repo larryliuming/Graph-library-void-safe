@@ -99,6 +99,7 @@ feature -- Access
 			eg_node: detachable EG_NODE
 			fig: detachable EG_FIGURE
 			l_world: like world
+			l_model: detachable EG_GRAPH
 		do
 			Precursor {EG_LINKABLE_FIGURE} (node)
 			elements ?= node.item_for_iteration
@@ -116,14 +117,20 @@ feature -- Access
 					check l_world /= Void end -- FIXME: Implied by ...?
 					eg_model ?= l_world.attached_factory.model_from_xml (l_item)
 					if eg_model /= Void then
-						if not world.model.has_linkable (eg_model) then
+						l_model := l_world.model
+						check l_model /= Void end -- FIXME: Implied by ...?
+						if not l_model.has_linkable (eg_model) then
 							eg_cluster ?= eg_model
 							if eg_cluster /= Void then
-								world.model.add_cluster (eg_cluster)
+								l_model := l_world.model
+								check l_model /= Void end -- FIXME: Implied by ...?
+								l_model.add_cluster (eg_cluster)
 							else
 								eg_node ?= eg_model
 								if eg_node /= Void then
-									world.model.add_node (eg_node)
+									l_model := l_world.model
+									check l_model /= Void end -- FIXME: Implied by ...?
+									l_model.add_node (eg_node)
 								else
 									check
 										node_or_cluster: False
@@ -134,7 +141,7 @@ feature -- Access
 						if not model.has (eg_model) then
 							model.extend (eg_model)
 						end
-						fig := world.figure_from_model (eg_model)
+						fig := l_world.figure_from_model (eg_model)
 						check
 							eg_model_inserted: eg_model /= Void
 						end
@@ -214,8 +221,8 @@ feature {NONE} -- Implementation
 			linkable_fig: detachable EG_LINKABLE_FIGURE
 		do
 			l_world := world
-			if world /= Void then
-				linkable_fig ?= world.items_to_figure_lookup_table.item (a_linkable)
+			if l_world /= Void then
+				linkable_fig ?= l_world.items_to_figure_lookup_table.item (a_linkable)
 				check
 					linkable_fig_in_view: linkable_fig /= Void
 				end

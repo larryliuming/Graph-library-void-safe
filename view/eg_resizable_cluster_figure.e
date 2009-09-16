@@ -270,10 +270,10 @@ feature {NONE} -- Implementation
 	update_user_size
 			-- Set `user_size' to current size.
 		do
-			if user_size = Void then
-				create user_size.make (left, top, right - left, bottom - top)
+			if attached user_size as l_user_size then
+				l_user_size.move_and_resize (left, top, right - left, bottom - top)
 			else
-				user_size.move_and_resize (left, top, right - left, bottom - top)
+				create user_size.make (left, top, right - left, bottom - top)
 			end
 		end
 

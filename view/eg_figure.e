@@ -106,7 +106,7 @@ feature -- Access
 				l_name := l_attribute.value
 				l_model := model
 				check l_model /= Void end -- FIXME: Implied by ...?
-				if (l_model.name = Void) or else not l_model.name ~ (l_name) then
+				if (l_model.name = Void) or else (not l_model.name ~ (l_name)) then
 					l_model.set_name (l_name)
 				end
 				node.forth

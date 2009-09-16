@@ -12,6 +12,8 @@ inherit
 	EV_MODEL_MOVE_HANDLE
 		export
 			{EG_POLYLINE_LINK_FIGURE} on_start_resizing
+		redefine
+			new_filled_list
 		end
 
 create
@@ -37,6 +39,12 @@ feature {NONE} -- Initialization
 			disable_always_shown
 			corresponding_line := owner
 			set_center
+		end
+
+	new_filled_list (n: INTEGER): like Current
+			-- <Precursor>
+		do
+			create Result.make (Void)
 		end
 
 feature -- Access

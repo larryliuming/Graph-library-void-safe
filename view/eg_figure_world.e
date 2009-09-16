@@ -13,7 +13,8 @@ inherit
 		redefine
 			default_create,
 			scale,
-			wipe_out
+			wipe_out,
+			new_filled_list
 		end
 
 	EV_SHARED_APPLICATION
@@ -126,6 +127,12 @@ feature {NONE} -- Initialization
 		ensure
 			model_set: model = a_model
 			factory_set: factory = a_factory
+		end
+
+	new_filled_list (n: INTEGER): like Current
+			-- <Precursor>
+		do
+			create Result.make_filled (n)
 		end
 
 feature -- Status Report
